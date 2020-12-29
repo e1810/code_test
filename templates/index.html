@@ -7,7 +7,9 @@
 
 <body>
 	<h1>Code Test</h1>
-	<b> Result: {{ result }} </b>
+	{% for line in result %}
+		<div><b> {{ line }} </b></div>
+	{% endfor %}
 	<form action="/" method="post">
 		<div>
 			<select name="lang">

@@ -1,9 +1,8 @@
 use std::process::Command;
 use std::env;
-use std::path::Path;
 
 
-pub fn exec(lang: String, code: String) -> String {
+pub fn exec(lang: String, code: String) -> Vec<String> {
 	let mut path = env::current_dir().unwrap();
 	path.push("dockerdir");
 	path.push(
@@ -12,26 +11,34 @@ pub fn exec(lang: String, code: String) -> String {
 			_ => "",
 		}
 	);
-	println!("{:?}", path);
 	std::fs::write(path.into_os_string(), code).unwrap();
 
 	// Docker image の build
 	let mut docker = Command::new("docker");
 	docker.arg("build").arg("-t").arg("code_executer").arg("dockerdir");
-	println!("{:?}", docker.output());
+	{
+		let out = docker.output().unwrap();
+		if !out.status.success() {
+			eprintln!("{}", String::from_utf8(out.stderr).unwrap());
+		}
+	}
 
 	// コンテナを実行
 	docker = Command::new("docker");
 	docker.arg("run").arg("code_executer");
 	match lang.as_ref() {
-		"Bash" => {docker.arg("sh").arg("./Main.sh");},
+		"Bash" => {docker.arg("bash").arg("./Main.sh");},
 		_ => ()
 	}
 	let result = docker.output().unwrap();
 
-	if result.status.success() {
-		String::from_utf8(result.stdout).unwrap()
-	} else {
-		String::from_utf8(result.stderr).unwrap()
-	}
+	let result_string = {
+		if result.status.success() {
+			"Result: OK\n".to_string() + &String::from_utf8(result.stdout).unwrap()
+		} else {
+			"Result: Error\n".to_string() + &String::from_utf8(result.stderr).unwrap()
+		}
+	}.to_string();
+
+	result_string.split("\n").map(|x| x.to_string()).collect()
 }

@@ -20,16 +20,17 @@ impl ResponseError for MyError {}
 struct IndexTemplate {
 	lang: String,
 	code: String,
-	result: String,
+	result: Vec<String>,
 }
 
 
 #[get("/")]
 pub async fn index_get() -> Result<HttpResponse, MyError> {
+	println!("'/' was accessed on GET");
 	let html = IndexTemplate{
 		lang: "Bash".to_string(),
 		code: "echo \"Hello, world\"".to_string(),
-		result: "0".to_string(),
+		result: vec!("0".to_string())
 	};
 	let res_body = html.render()?;
 	Ok(HttpResponse::Ok()
@@ -45,14 +46,15 @@ pub struct Submission {
 	code: String,
 }
 
-
 #[post("/")]
 pub async fn index_post(params: web::Form<Submission>) -> Result<HttpResponse, MyError> {
+	println!("'/' was accessed on POST");
 	let html = IndexTemplate{
 		lang: params.lang.clone(), 
 		code: params.code.clone(),
 		result: exec::exec(params.lang.clone(), params.code.clone()),
 	};
+	println!("{:?}", html.result);
 	let res_body = html.render()?;
 	Ok(HttpResponse::Ok()
 		.content_type("text/html")
