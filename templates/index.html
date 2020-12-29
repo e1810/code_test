@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Code Test</title>
+</head>
+
+<body>
+	<h1>Code Test</h1>
+	<b> Result: {{ result }} </b>
+	<form action="/" method="post">
+		<div>
+			<select name="lang">
+				<option value="Bash">Bash</option>
+			</select>
+		</div>
+		<div>
+			<textarea name="code" cols=60 rows=20>{{ code }}</textarea>
+		</div>
+		<div>
+			<button>submit</button>
+		</div>
+	</form>
+</body>
+</html>
