@@ -1,8 +1,30 @@
-use std::process::Command;
+use std::process::{Command, Output};
 use std::env;
 
 
-pub fn exec(lang: String, code: String) -> Vec<String> {
+pub struct ExecResult {
+	pub status: i32,
+	pub stdout: Vec<String>,
+	pub stderr: Vec<String>
+}
+
+
+fn output2result(output: Output) -> ExecResult {
+	ExecResult {
+		status: match output.status.code() {
+			Some(code) => code,
+			None => -1,
+		},
+		stdout:
+			String::from_utf8(output.stdout).unwrap()
+				.split("\n").map(|x| x.to_string()).collect(),
+		stderr:
+			String::from_utf8(output.stderr).unwrap()
+				.split("\n").map(|x| x.to_string()).collect(),
+	}
+}
+
+pub fn exec(lang: String, code: String) -> ExecResult {
 	let mut path = env::current_dir().unwrap();
 	path.push("dockerdir");
 	path.push(
@@ -30,15 +52,6 @@ pub fn exec(lang: String, code: String) -> Vec<String> {
 		"Bash" => {docker.arg("bash").arg("./Main.sh");},
 		_ => ()
 	}
-	let result = docker.output().unwrap();
 
-	let result_string = {
-		if result.status.success() {
-			"Result: OK\n".to_string() + &String::from_utf8(result.stdout).unwrap()
-		} else {
-			"Result: Error\n".to_string() + &String::from_utf8(result.stderr).unwrap()
-		}
-	}.to_string();
-
-	result_string.split("\n").map(|x| x.to_string()).collect()
+	output2result(docker.output().unwrap())
 }

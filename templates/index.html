@@ -7,9 +7,6 @@
 
 <body>
 	<h1>Code Test</h1>
-	{% for line in result %}
-		<div><b> {{ line }} </b></div>
-	{% endfor %}
 	<form action="/" method="post">
 		<div>
 			<select name="lang">
@@ -23,5 +20,21 @@
 			<button>submit</button>
 		</div>
 	</form>
+
+	<div>
+		<div> status code: {{ result.status }} </div>
+		<div>
+			<div> stdout </div>
+			{% for line in result.stdout %}
+				<div> {{ line }} </div>
+			{% endfor %}
+		</div>
+		<div>
+			<div> stderr </div>
+			{% for line in result.stderr %}
+				<div> {{ line }} </div>
+			{% endfor %}
+		</div>
+	</div>
 </body>
 </html>

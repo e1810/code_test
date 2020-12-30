@@ -20,7 +20,7 @@ impl ResponseError for MyError {}
 struct IndexTemplate {
 	lang: String,
 	code: String,
-	result: Vec<String>,
+	result: exec::ExecResult,
 }
 
 
@@ -30,7 +30,7 @@ pub async fn index_get() -> Result<HttpResponse, MyError> {
 	let html = IndexTemplate{
 		lang: "Bash".to_string(),
 		code: "echo \"Hello, world\"".to_string(),
-		result: vec!("0".to_string())
+		result: exec::exec("Bash".to_string(), "echo \"Hello, world\"".to_string()),
 	};
 	let res_body = html.render()?;
 	Ok(HttpResponse::Ok()
@@ -54,7 +54,6 @@ pub async fn index_post(params: web::Form<Submission>) -> Result<HttpResponse, M
 		code: params.code.clone(),
 		result: exec::exec(params.lang.clone(), params.code.clone()),
 	};
-	println!("{:?}", html.result);
 	let res_body = html.render()?;
 	Ok(HttpResponse::Ok()
 		.content_type("text/html")

@@ -1,1 +1,2 @@
-echo -e "hello...\nworld!"
+echo 1
+rd
