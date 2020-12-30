@@ -286,6 +286,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "anyhow"
+version = "1.0.37"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ee67c11feeac938fae061b232e38e0b6d94f97a9df10e6271319325ac4c56a86"
+
+[[package]]
 name = "arrayvec"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1454,7 +1460,9 @@ name = "somefiles"
 version = "0.1.0"
 dependencies = [
  "actix-web",
+ "anyhow",
  "askama",
+ "once_cell",
  "serde",
  "thiserror",
 ]

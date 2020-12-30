@@ -1,2 +1,5 @@
-echo 1
-rd
+#include<stdio.h>
+
+int main(){
+  puts("Hello, world");
+}
