@@ -1,5 +1,5 @@
-#include<cstdio>
+#include<iostream>
 
 int main(){
-	puts("Hello");
+  std::cout << "Hello" << '\n';
 }

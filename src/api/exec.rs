@@ -33,6 +33,7 @@ pub fn exec(lang: String, code: String) -> Result<ExecResult> {
 		match lang.as_ref() {
 			"Bash" => "Main.sh",
 			"C" => "Main.c",
+			"C++" => "Main.cpp",
 			_ => "",
 		}
 	);
@@ -53,6 +54,7 @@ pub fn exec(lang: String, code: String) -> Result<ExecResult> {
 	match lang.as_ref() {
 		"Bash" => {docker.arg("bash").arg("./Main.sh");},
 		"C" => {docker.arg("./Main_c.out");},
+		"C++" => {docker.arg("./Main_cpp.out");},
 		_ => ()
 	}
 

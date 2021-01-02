@@ -8,7 +8,7 @@ COPY ./Main.cpp ./Main.cpp
 COPY ./Main.rs ./Main.rs
 
 
-RUN gcc Main.c -o Main_c.out
+RUN gcc Main.c -O2 -o Main_c.out -lm
 RUN g++ Main.cpp -o Main_cpp.out
 
 CMD ["echo", ":("]
